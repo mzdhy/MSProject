@@ -83,6 +83,7 @@ public class httpInterface {
 		server.createContext("/Register", new Register());
 		server.createContext("/LogIn", new LogIn());
 		server.createContext("/SignOut", new SignOut());
+		server.createContext("/AccountUpdate", new AccountUpdate());
 		server.createContext("/Check", new Check());
 		server.createContext("/GrabProcess", new GrabDataHandler());
 		server.createContext("/GrabAllProcess", new GrabAllDataHandler());
@@ -248,6 +249,78 @@ public class httpInterface {
 		OutputStream os = t.getResponseBody();
 		os.write(response.getBytes());
 		os.close();
+		}
+	}
+	
+	static class AccountUpdate implements HttpHandler {
+		public void handle(HttpExchange t) throws IOException {
+		
+		System.out.println("AccountUpdate Handler is called ");
+		String response = "";
+		if(!authorithy) {
+			response = "please login before update";
+			t.sendResponseHeaders(200, response.length());
+			OutputStream os = t.getResponseBody();
+			os.write(response.getBytes());
+			os.close();
+			return;
+		}
+		
+		
+		String rootpath = System.getProperty("user.dir");
+		Map<String, String> params = queryToMap(t.getRequestURI().getQuery());
+		int sep = params.get("ip").indexOf(':');
+		String ip = params.get("ip").substring(0,sep);
+		int port = Integer.parseInt(params.get("ip").substring(sep+1));
+
+		if(map.get(params.get("ip"))==null) {
+			response = "Wrong ip";
+			t.sendResponseHeaders(200, response.length());
+			OutputStream os = t.getResponseBody();
+			os.write(response.getBytes());
+			os.close();
+			return ;
+		}
+
+		checkAndKill.connect(ip,port, params.get("user"), params.get("pswd"));
+
+
+		
+		
+		
+		
+		checkAndKill.Check();			
+		if(checkAndKill.isAuthenticated) {
+			ArrayList<String> newAccount = new ArrayList<String>();
+			newAccount.add(params.get("user"));
+			newAccount.add(params.get("pswd"));
+			map.put(params.get("ip"), newAccount);
+			
+			
+			File file = new File(rootpath+File.separator+"src"+File.separator+"database"+File.separator+currentUser+".json");
+			PrintWriter writer = null;
+			try {
+				writer = new PrintWriter(file);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+
+			Gson gson = new Gson();
+			String jsonW = gson.toJson(map);
+			writer.println(jsonW);
+			writer.close();
+			response = "update successfully";
+		}else {
+			response = "wrong username and password";
+		}
+
+		t.sendResponseHeaders(200, response.length());
+		OutputStream os = t.getResponseBody();
+		os.write(response.getBytes());
+		os.close();
+		
+		
+		
 		}
 	}
 	
