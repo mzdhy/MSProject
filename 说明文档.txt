@@ -1,4 +1,5 @@
 运行httpInterface以启动服务器
+使用前可以手动删除UserData.json和src/database里面的json文件来清空所有缓存（已有的用户数据）
 使用"http://localhost:8000/Home"以查看使用说明
 使用"http://localhost:8000/Register/?username=xxxxx&pswd=xxxxx"来注册新账户
 使用"http://localhost:8000/LogIn/?username=xxxxx&pswd=xxxxx"来登录已有账户
