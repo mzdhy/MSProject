@@ -89,6 +89,8 @@ public class httpInterface {
 		server.createContext("/GrabAllProcess", new GrabAllDataHandler());
 		server.createContext("/CloseProcessByIndex", new CloseDataHandler());
 		server.createContext("/CloseProcessByName", new CloseDataByNameHandler());
+		server.createContext("/CustomizedInstruction", new CustomizedInstructionHandler());
+		server.createContext("/SingleCustomizedInstruction", new SingleCustomizedInstructionHandler());
 		server.setExecutor(null); // creates a default executor
 		server.start();
 	}
@@ -590,6 +592,89 @@ public class httpInterface {
 		}
 		
 
+	}
+	
+	static class  CustomizedInstructionHandler implements HttpHandler {
+		public void handle(HttpExchange t) throws IOException {
+		
+		System.out.println("CustomizedInstruction Handler is called ");
+		String response = "";
+		if(!authorithy) {
+			response = "please login before use grab process";
+			t.sendResponseHeaders(200, response.length());
+			OutputStream os = t.getResponseBody();
+			os.write(response.getBytes());
+			os.close();
+			return;
+		}
+		
+		Map<String, String> params = queryToMap(t.getRequestURI().getQuery());
+		
+
+		String ins = params.get("instruction");
+		ins = ins.replace("_", " ");
+		response = "Current username: "+currentUser+"   \n";
+
+		for(String s: map.keySet()) {
+			if(map.get(s).get(0).equals(params.get("user"))&&map.get(s).get(1).equals(params.get("pswd"))) {
+				String ip = s.substring(0,s.indexOf(":"));
+				int port = Integer.parseInt(s.substring(s.indexOf(":")+1));
+				checkAndKill.connect(ip,port,map.get(s).get(0),map.get(s).get(1));
+				response += "Current ip: " + ip + "   Current port: " + port + "\n";
+				response += checkAndKill.instruction(ins)+"\n";
+			}
+		}
+				
+
+
+
+
+		t.sendResponseHeaders(200, response.length());
+		OutputStream os = t.getResponseBody();
+		os.write(response.getBytes());
+		os.close();
+		}
+	}
+	
+	static class  SingleCustomizedInstructionHandler implements HttpHandler {
+		public void handle(HttpExchange t) throws IOException {
+		
+		System.out.println("SingleCustomizedInstruction Handler is called ");
+		String response = "";
+		if(!authorithy) {
+			response = "please login before use grab process";
+			t.sendResponseHeaders(200, response.length());
+			OutputStream os = t.getResponseBody();
+			os.write(response.getBytes());
+			os.close();
+			return;
+		}
+		
+		Map<String, String> params = queryToMap(t.getRequestURI().getQuery());
+		
+
+		String ins = params.get("instruction");
+		ins = ins.replace("_", " ");
+		response = "Current username: "+currentUser+"   \n";
+		int sep = params.get("ip").indexOf(':');
+		String ip = params.get("ip").substring(0,sep);
+		int port = Integer.parseInt(params.get("ip").substring(sep+1));
+
+
+		checkAndKill.connect(ip,port,map.get(params.get("ip")).get(0),map.get(params.get("ip")).get(1));
+		response += "Current ip: " + ip + "   Current port: " + port + "\n";
+		response += checkAndKill.instruction(ins)+"\n";
+
+				
+
+
+
+
+		t.sendResponseHeaders(200, response.length());
+		OutputStream os = t.getResponseBody();
+		os.write(response.getBytes());
+		os.close();
+		}
 	}
 	
 	public static Map<String, String> queryToMap(String query) {

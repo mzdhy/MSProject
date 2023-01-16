@@ -1,0 +1,16 @@
+运行httpInterface以启动服务器
+使用"http://localhost:8000/Home"以查看使用说明
+使用"http://localhost:8000/Register/?username=xxxxx&pswd=xxxxx"来注册新账户
+使用"http://localhost:8000/LogIn/?username=xxxxx&pswd=xxxxx"来登录已有账户
+使用"http://localhost:8000/SignOut"来登出当前正在登录的账户
+使用"http://localhost:8000/Check"来查看当前账户已保存的服务器信息
+使用"http://localhost:8000/GrabProcess/?ip=192.168.108.129:22&user=xxxxx&pswd=xxxxx"访问服务器
+使用"http://localhost:8000/CloseProcess/?ip=192.168.108.129:22&Process1Index=1&Process2Index=3&Process3Index=4"进行删除操作，进程索引必须为增序，可以根据需要一次关闭一个或多个进程
+ip后面填写ip服务器的ip地址(冒号后面为端口数)，user填写用户名，pswd填写密码
+如果成功访问过一次之后，可以直接使用ip地址来访问对应服务器，不需要再次输入用户名和密码，例子："http://localhost:8000/GrabProcess/?ip=192.168.108.129:22"
+如果不能直接使用ip地址来直接访问，可以连续多次使用完整路径来访问，以确保数据成功录入数据库中，之后再直接使用ip地址来直接访问
+使用"http://localhost:8000/GrabAllProcess"来同时查看所有服务器
+使用"http://localhost:8000/CloseProcessByName/?ProcessName1=xxxxx&ProcessName2=xxxxx"来删除所有服务器中名字相同的进程，想删除的进程的名字填写在ProcessNameIndex=后面
+使用"http://localhost:8000/AccountUpdate/?ip=192.168.108.129:22&user=xxxxx&pswd=xxxxx"来更新用户名和密码
+使用"http://localhost:8000/CustomizedInstruction/?user=xxxxx&pswd=xxxxx&instruction=xxxxx"来对所有对应账户名和密码的服务器使用对应的指令（instruction）
+使用"http://localhost:8000/SingleCustomizedInstruction/?ip=192.168.108.129:22&instruction=xxxxx"来对单个服务器使用对应的指令

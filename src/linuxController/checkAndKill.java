@@ -247,6 +247,53 @@ public class checkAndKill {
 
 	           
 	   }
+	   
+	   public static String instruction(String ins) {
+	       try {
+
+	           Connection conn = new Connection(ip,port);
+	           conn.connect();
+	           isAuthenticated = conn.authenticateWithPassword(user,
+	                   pswd);
+	           if (isAuthenticated == false)
+	               throw new IOException("Authentication failed.");
+	           Session sess = conn.openSession();
+	           sess.execCommand(ins);
+	           InputStream stdout = new StreamGobbler(sess.getStdout());
+	           BufferedReader br = new BufferedReader(
+	                   new InputStreamReader(stdout));
+	           
+
+	           String result = "";
+	           output= new ArrayList<String>();
+	           int i = 0;
+	           while (true) {
+
+	               String line = br.readLine();
+	               
+	               if (line == null)
+	                   break;
+	               output.add(line);
+	               result+=line+"\n";
+	               i++;
+	           }
+	           
+           
+	           conn.close();
+	           
+	           result += "\nsuccessful\n";
+	           return result;
+	         
+	           
+	           
+
+
+	       } catch (IOException e) {
+	           e.printStackTrace(System.err);
+	           return e.getMessage();
+
+	       }
+	   }
 
 	
 
