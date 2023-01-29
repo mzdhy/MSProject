@@ -91,6 +91,16 @@ public class httpInterface {
 		server.createContext("/CloseProcessByName", new CloseDataByNameHandler());
 		server.createContext("/CustomizedInstruction", new CustomizedInstructionHandler());
 		server.createContext("/SingleCustomizedInstruction", new SingleCustomizedInstructionHandler());
+		server.createContext("/startShell", new startShell());
+		server.createContext("/closeShell", new closeShell());
+		server.createContext("/shellIns", new shellIns());
+		server.createContext("/upload", new upload());
+		server.createContext("/uploadWithDestinationFile", new uploadWithDestinationFile());
+		server.createContext("/uploadAll", new uploadAll());
+		server.createContext("/uploadAllWithDestinationFile", new uploadAllWithDestinationFile());
+		server.createContext("/download", new download());
+		server.createContext("/downloadWithDestinationFile", new downloadWithDestinationFile());
+
 		server.setExecutor(null); // creates a default executor
 		server.start();
 	}
@@ -284,15 +294,15 @@ public class httpInterface {
 			return ;
 		}
 
-		checkAndKill.connect(ip,port, params.get("user"), params.get("pswd"));
+		facade.connect(ip,port, params.get("user"), params.get("pswd"));
 
 
 		
 		
 		
 		
-		checkAndKill.Check();			
-		if(checkAndKill.isAuthenticated) {
+		facade.Check();			
+		if(facade.isAuthenticated) {
 			ArrayList<String> newAccount = new ArrayList<String>();
 			newAccount.add(params.get("user"));
 			newAccount.add(params.get("pswd"));
@@ -384,21 +394,21 @@ public class httpInterface {
 					os.write(response.getBytes());
 					os.close();
 				}else {
-					checkAndKill.connect(ip,port  ,map.get(params.get("ip")).get(0),map.get(params.get("ip")).get(1));
+					facade.connect(ip,port  ,map.get(params.get("ip")).get(0),map.get(params.get("ip")).get(1));
 
 				}
 			}
 			else {
 				full = true;
-				checkAndKill.connect(ip,port, params.get("user"), params.get("pswd"));
+				facade.connect(ip,port, params.get("user"), params.get("pswd"));
 
 
 			}
 			
 			
 			response = "Current username: "+currentUser+"   ";
-			response += checkAndKill.Check();			
-			if(checkAndKill.isAuthenticated&&full&&(map.get(params.get("ip"))==null||(!map.get(params.get("ip")).get(0).equals(params.get("user"))))) {
+			response += facade.Check();			
+			if(facade.isAuthenticated&&full&&(map.get(params.get("ip"))==null||(!map.get(params.get("ip")).get(0).equals(params.get("user"))))) {
 				ArrayList<String> newAccount = new ArrayList<String>();
 				newAccount.add(params.get("user"));
 				newAccount.add(params.get("pswd"));
@@ -432,7 +442,7 @@ public class httpInterface {
 			System.out.println("GraAllData Handler is called ");
 			String response = "";
 			if(!authorithy) {
-				response = "please login before use grab all process";
+				response = "please login before use GrabAllDataHandler";
 				t.sendResponseHeaders(200, response.length());
 				OutputStream os = t.getResponseBody();
 				os.write(response.getBytes());
@@ -451,8 +461,8 @@ public class httpInterface {
 			for(String i : map.keySet()) {
 				ip = i.substring(0,i.indexOf(":"));
 				port = Integer.parseInt(i.substring(i.indexOf(":")+1));
-				checkAndKill.connect(ip,port  ,map.get(i).get(0),map.get(i).get(1));
-				response += checkAndKill.CheckAll()+"\n";
+				facade.connect(ip,port  ,map.get(i).get(0),map.get(i).get(1));
+				response += facade.CheckAll()+"\n";
 			}
 			
 			
@@ -474,7 +484,7 @@ public class httpInterface {
 		System.out.println("CloseData Handler is called ");
 		String response = "";
 		if(!authorithy) {
-			response = "please login before use grab process";
+			response = "please login before use CloseDataHandler";
 			t.sendResponseHeaders(200, response.length());
 			OutputStream os = t.getResponseBody();
 			os.write(response.getBytes());
@@ -500,13 +510,13 @@ public class httpInterface {
 				os.write(response.getBytes());
 				os.close();
 			}else {
-				checkAndKill.connect(ip,port  ,map.get(params.get("ip")).get(0),map.get(params.get("ip")).get(1));
+				facade.connect(ip,port  ,map.get(params.get("ip")).get(0),map.get(params.get("ip")).get(1));
 
 			}
 		}
 		else {
 			full = true;
-			checkAndKill.connect(ip,port, params.get("user"), params.get("pswd"));
+			facade.connect(ip,port, params.get("user"), params.get("pswd"));
 
 
 		}
@@ -518,8 +528,8 @@ public class httpInterface {
 		}
 		
 		response = "Current username: "+currentUser+"\n";
-		response += checkAndKill.remove(indexOfProcess);
-		if(checkAndKill.isAuthenticated&&full&&(map.get(params.get("ip"))==null||(!map.get(params.get("ip")).get(0).equals(params.get("user"))))) {
+		response += facade.remove(indexOfProcess);
+		if(facade.isAuthenticated&&full&&(map.get(params.get("ip"))==null||(!map.get(params.get("ip")).get(0).equals(params.get("user"))))) {
 			ArrayList<String> newAccount = new ArrayList<String>();
 			newAccount.add(params.get("user"));
 			newAccount.add(params.get("pswd"));
@@ -554,7 +564,7 @@ public class httpInterface {
 		System.out.println("CloseDataByName Handler is called ");
 		String response = "";
 		if(!authorithy) {
-			response = "please login before use grab process";
+			response = "please login before use CloseDataByNameHandler";
 			t.sendResponseHeaders(200, response.length());
 			OutputStream os = t.getResponseBody();
 			os.write(response.getBytes());
@@ -577,8 +587,8 @@ public class httpInterface {
 		for(String i : map.keySet()) {
 			ip = i.substring(0,i.indexOf(":"));
 			port = Integer.parseInt(i.substring(i.indexOf(":")+1));
-			checkAndKill.connect(ip,port,map.get(i).get(0),map.get(i).get(1));
-			response += checkAndKill.removeByName(name)+"\n";
+			facade.connect(ip,port,map.get(i).get(0),map.get(i).get(1));
+			response += facade.removeByName(name)+"\n";
 		}
 				
 
@@ -600,7 +610,7 @@ public class httpInterface {
 		System.out.println("CustomizedInstruction Handler is called ");
 		String response = "";
 		if(!authorithy) {
-			response = "please login before use grab process";
+			response = "please login before use CustomizedInstructionHandler";
 			t.sendResponseHeaders(200, response.length());
 			OutputStream os = t.getResponseBody();
 			os.write(response.getBytes());
@@ -619,9 +629,9 @@ public class httpInterface {
 			if(map.get(s).get(0).equals(params.get("user"))&&map.get(s).get(1).equals(params.get("pswd"))) {
 				String ip = s.substring(0,s.indexOf(":"));
 				int port = Integer.parseInt(s.substring(s.indexOf(":")+1));
-				checkAndKill.connect(ip,port,map.get(s).get(0),map.get(s).get(1));
+				facade.connect(ip,port,map.get(s).get(0),map.get(s).get(1));
 				response += "Current ip: " + ip + "   Current port: " + port + "\n";
-				response += checkAndKill.instruction(ins)+"\n";
+				response += facade.instruction(ins)+"\n";
 			}
 		}
 				
@@ -661,15 +671,282 @@ public class httpInterface {
 		int port = Integer.parseInt(params.get("ip").substring(sep+1));
 
 
-		checkAndKill.connect(ip,port,map.get(params.get("ip")).get(0),map.get(params.get("ip")).get(1));
+		facade.connect(ip,port,map.get(params.get("ip")).get(0),map.get(params.get("ip")).get(1));
 		response += "Current ip: " + ip + "   Current port: " + port + "\n";
-		response += checkAndKill.instruction(ins)+"\n";
+		response += facade.instruction(ins)+"\n";
 
 				
 
 
 
 
+		t.sendResponseHeaders(200, response.length());
+		OutputStream os = t.getResponseBody();
+		os.write(response.getBytes());
+		os.close();
+		}
+	}
+	
+	static class startShell implements HttpHandler {
+		public void handle(HttpExchange t) throws IOException {
+		
+		System.out.println("startShell Handler is called ");
+		String response = "";
+		if(!authorithy) {
+			response = "please login before use startShell process";
+			t.sendResponseHeaders(200, response.length());
+			OutputStream os = t.getResponseBody();
+			os.write(response.getBytes());
+			os.close();
+			return;
+		}
+		Map<String, String> params = queryToMap(t.getRequestURI().getQuery());
+		response = "Current username: "+currentUser+"   \n";
+		int sep = params.get("ip").indexOf(':');
+		String ip = params.get("ip").substring(0,sep);
+		int port = Integer.parseInt(params.get("ip").substring(sep+1));
+		facade.connect(ip,port,map.get(params.get("ip")).get(0),map.get(params.get("ip")).get(1));
+		
+		response += facade.link();
+
+		t.sendResponseHeaders(200, response.length());
+		OutputStream os = t.getResponseBody();
+		os.write(response.getBytes());
+		os.close();
+		}
+	}
+	
+	static class closeShell implements HttpHandler {
+		public void handle(HttpExchange t) throws IOException {
+		
+		System.out.println("closeShell Handler is called ");
+		String response = "";
+		if(!authorithy) {
+			response = "please login before use closeShell process";
+			t.sendResponseHeaders(200, response.length());
+			OutputStream os = t.getResponseBody();
+			os.write(response.getBytes());
+			os.close();
+			return;
+		}
+		
+		response += facade.closeShell();
+		t.sendResponseHeaders(200, response.length());
+		OutputStream os = t.getResponseBody();
+		os.write(response.getBytes());
+		os.close();
+		}
+	}
+	
+	static class shellIns implements HttpHandler {
+		public void handle(HttpExchange t) throws IOException {
+		
+		System.out.println("shellIns Handler is called ");
+		String response = "";
+		if(!authorithy) {
+			response = "please login before use shellIns";
+			t.sendResponseHeaders(200, response.length());
+			OutputStream os = t.getResponseBody();
+			os.write(response.getBytes());
+			os.close();
+			return;
+		}
+		
+		Map<String, String> params = queryToMap(t.getRequestURI().getQuery());
+		
+
+		String ins = params.get("instruction");
+		ins = ins.replace("_", " ");
+		response = "Current username: "+currentUser+"   \n";
+		
+
+		response += facade.shellIns(ins)+"\n";
+
+				
+
+
+
+
+		t.sendResponseHeaders(200, response.length());
+		OutputStream os = t.getResponseBody();
+		os.write(response.getBytes());
+		os.close();
+		}
+	}
+	
+	static class upload implements HttpHandler {
+		public void handle(HttpExchange t) throws IOException {
+		
+		System.out.println("upload Handler is called ");
+		String response = "";
+		if(!authorithy) {
+			response = "please login before use upload";
+			t.sendResponseHeaders(200, response.length());
+			OutputStream os = t.getResponseBody();
+			os.write(response.getBytes());
+			os.close();
+			return;
+		}
+		Map<String, String> params = queryToMap(t.getRequestURI().getQuery());
+		response = "Current username: "+currentUser+"   \n";
+		int sep = params.get("ip").indexOf(':');
+		String ip = params.get("ip").substring(0,sep);
+		int port = Integer.parseInt(params.get("ip").substring(sep+1));
+		
+		facade.connect(ip,port,map.get(params.get("ip")).get(0),map.get(params.get("ip")).get(1));
+		
+		response += facade.upload(params.get("local"));
+		
+		t.sendResponseHeaders(200, response.length());
+		OutputStream os = t.getResponseBody();
+		os.write(response.getBytes());
+		os.close();
+		}
+	}
+	
+	static class uploadWithDestinationFile implements HttpHandler {
+		public void handle(HttpExchange t) throws IOException {
+		
+		System.out.println("uploadWithDestinationFile Handler is called ");
+		String response = "";
+		if(!authorithy) {
+			response = "please login before use uploadWithDestinationFile";
+			t.sendResponseHeaders(200, response.length());
+			OutputStream os = t.getResponseBody();
+			os.write(response.getBytes());
+			os.close();
+			return;
+		}
+		Map<String, String> params = queryToMap(t.getRequestURI().getQuery());
+		response = "Current username: "+currentUser+"   \n";
+		int sep = params.get("ip").indexOf(':');
+		String ip = params.get("ip").substring(0,sep);
+		int port = Integer.parseInt(params.get("ip").substring(sep+1));
+		
+		facade.connect(ip,port,map.get(params.get("ip")).get(0),map.get(params.get("ip")).get(1));
+		
+		response += facade.upload(params.get("local"), params.get("remote"));
+		
+		t.sendResponseHeaders(200, response.length());
+		OutputStream os = t.getResponseBody();
+		os.write(response.getBytes());
+		os.close();
+		}
+	}
+	
+	static class uploadAll implements HttpHandler {
+		public void handle(HttpExchange t) throws IOException {
+		
+		System.out.println("uploadAll Handler is called ");
+		String response = "";
+		if(!authorithy) {
+			response = "please login before use uploadAll";
+			t.sendResponseHeaders(200, response.length());
+			OutputStream os = t.getResponseBody();
+			os.write(response.getBytes());
+			os.close();
+			return;
+		}
+		Map<String, String> params = queryToMap(t.getRequestURI().getQuery());
+		response = "Current username: "+currentUser+"   \n";
+		int sep = params.get("ip").indexOf(':');
+		String ip = params.get("ip").substring(0,sep);
+		int port = Integer.parseInt(params.get("ip").substring(sep+1));
+		
+		facade.connect(ip,port,map.get(params.get("ip")).get(0),map.get(params.get("ip")).get(1));
+		
+		response += facade.uploadAll();
+		
+		t.sendResponseHeaders(200, response.length());
+		OutputStream os = t.getResponseBody();
+		os.write(response.getBytes());
+		os.close();
+		}
+	}
+	
+	static class uploadAllWithDestinationFile implements HttpHandler {
+		public void handle(HttpExchange t) throws IOException {
+		
+		System.out.println("uploadAllWithDestinationFile Handler is called ");
+		String response = "";
+		if(!authorithy) {
+			response = "please login before use uploadAllWithDestinationFile";
+			t.sendResponseHeaders(200, response.length());
+			OutputStream os = t.getResponseBody();
+			os.write(response.getBytes());
+			os.close();
+			return;
+		}
+		Map<String, String> params = queryToMap(t.getRequestURI().getQuery());
+		response = "Current username: "+currentUser+"   \n";
+		int sep = params.get("ip").indexOf(':');
+		String ip = params.get("ip").substring(0,sep);
+		int port = Integer.parseInt(params.get("ip").substring(sep+1));
+		
+		facade.connect(ip,port,map.get(params.get("ip")).get(0),map.get(params.get("ip")).get(1));
+		
+		response += facade.uploadAll(params.get("folderName"));
+		
+		t.sendResponseHeaders(200, response.length());
+		OutputStream os = t.getResponseBody();
+		os.write(response.getBytes());
+		os.close();
+		}
+	}
+	
+	static class download implements HttpHandler {
+		public void handle(HttpExchange t) throws IOException {
+		
+		System.out.println("download Handler is called ");
+		String response = "";
+		if(!authorithy) {
+			response = "please login before use download";
+			t.sendResponseHeaders(200, response.length());
+			OutputStream os = t.getResponseBody();
+			os.write(response.getBytes());
+			os.close();
+			return;
+		}
+		Map<String, String> params = queryToMap(t.getRequestURI().getQuery());
+		response = "Current username: "+currentUser+"   \n";
+		int sep = params.get("ip").indexOf(':');
+		String ip = params.get("ip").substring(0,sep);
+		int port = Integer.parseInt(params.get("ip").substring(sep+1));
+		
+		facade.connect(ip,port,map.get(params.get("ip")).get(0),map.get(params.get("ip")).get(1));
+		
+		response += facade.download(params.get("fileName"));
+		
+		t.sendResponseHeaders(200, response.length());
+		OutputStream os = t.getResponseBody();
+		os.write(response.getBytes());
+		os.close();
+		}
+	}
+	
+	static class downloadWithDestinationFile implements HttpHandler {
+		public void handle(HttpExchange t) throws IOException {
+		
+		System.out.println("downloadWithDestinationFile Handler is called ");
+		String response = "";
+		if(!authorithy) {
+			response = "please login before use downloadWithDestinationFile";
+			t.sendResponseHeaders(200, response.length());
+			OutputStream os = t.getResponseBody();
+			os.write(response.getBytes());
+			os.close();
+			return;
+		}
+		Map<String, String> params = queryToMap(t.getRequestURI().getQuery());
+		response = "Current username: "+currentUser+"   \n";
+		int sep = params.get("ip").indexOf(':');
+		String ip = params.get("ip").substring(0,sep);
+		int port = Integer.parseInt(params.get("ip").substring(sep+1));
+		
+		facade.connect(ip,port,map.get(params.get("ip")).get(0),map.get(params.get("ip")).get(1));
+		
+		response += facade.download(params.get("fileName"),params.get("folderName"));
+		
 		t.sendResponseHeaders(200, response.length());
 		OutputStream os = t.getResponseBody();
 		os.write(response.getBytes());

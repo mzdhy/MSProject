@@ -14,7 +14,7 @@ import ch.ethz.ssh2.StreamGobbler;
 
 
 
-public class checkAndKill {
+public class facade {
  
  
 	   private static  String ip;
@@ -23,6 +23,7 @@ public class checkAndKill {
 	   private static  String pswd;
 	   private static  ArrayList<String> output;
 	   public static boolean isAuthenticated;
+	   public static boolean started = false;
 	   
 	   
 	   public static void connect(String i, int p, String u, String ps) {
@@ -294,6 +295,74 @@ public class checkAndKill {
 
 	       }
 	   }
+	   
+	   public static String link() {
+    	   if(!multipleIns.link) {
+    		   
+	    	   String s = "Current ip: " + ip + "   Current port: " + port + "\n"+multipleIns.link(ip,user,pswd,port);
+	    	   if(s.contains("start successfully")) {
+	    		   started = true;
+	    	   }
+	    	   return s;
+    	   }else {
+    		   return "please use \"http://localhost:8000/closeShell\" to close before start";
+    	   }
+	   }
+	   
+	   public static String shellIns(String ins) {
+		   if(!started) {
+			   return "please use \"http://localhost:8000/startShell\" to start";
+		   }
+	       try {
+	    	   
+	    	   return multipleIns.ins(ins);
+	           
+	           
+
+
+	       } catch (Exception e) {
+	           e.printStackTrace(System.err);
+	           return e.getMessage();
+
+	       }
+	   }
+	   
+	   
+	   public static String closeShell() {
+		   if(!started) {
+			   return "please use \"http://localhost:8000/startRemoteShell\" to start before close";
+		   }else {
+			   multipleIns.close(); 
+			   started = false;
+			   return "close successfully";
+		   }
+
+	   }
+	   
+	   public static String upload(String sourceFile, String destinationFile) {
+		   return uploadTester.upload(ip, user, pswd, port, sourceFile, destinationFile);
+	   }
+	   
+	   public static String upload(String sourceFile) {
+		   return uploadTester.upload(ip, user, pswd, port, sourceFile);
+	   }
+	   
+	   public static String uploadAll(String folderName) {
+		   return uploadTester.uploadAll(ip, user, pswd, port, folderName);
+	   }
+	   
+	   public static String uploadAll() {
+		   return uploadTester.uploadAll(ip, user, pswd, port);
+	   }
+	   
+	   public static String download(String Filename, String destinationFile) {
+		   return downloadTester.download(ip, user, pswd, port, Filename, destinationFile);
+	   }
+	   
+	   public static String download(String Filename) {
+		   return downloadTester.download(ip, user, pswd, port, Filename);
+	   }
+	   
 
 	
 
