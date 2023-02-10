@@ -363,6 +363,10 @@ public class facade {
 		   return downloadTester.download(ip, user, pswd, port, Filename);
 	   }
 	   
+	   public static String downloadAll(String FolderName) {
+		   return downloadTester.downloadAll(ip, user, pswd, port, FolderName);
+	   }
+	   
 
 	
 

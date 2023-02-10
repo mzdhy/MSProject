@@ -100,6 +100,7 @@ public class httpInterface {
 		server.createContext("/uploadAllWithDestinationFile", new uploadAllWithDestinationFile());
 		server.createContext("/download", new download());
 		server.createContext("/downloadWithDestinationFile", new downloadWithDestinationFile());
+		server.createContext("/downloadAll", new downloadAll());
 
 		server.setExecutor(null); // creates a default executor
 		server.start();
@@ -916,6 +917,36 @@ public class httpInterface {
 		facade.connect(ip,port,map.get(params.get("ip")).get(0),map.get(params.get("ip")).get(1));
 		
 		response += facade.download(params.get("fileName"));
+		
+		t.sendResponseHeaders(200, response.length());
+		OutputStream os = t.getResponseBody();
+		os.write(response.getBytes());
+		os.close();
+		}
+	}
+	
+	static class downloadAll implements HttpHandler {
+		public void handle(HttpExchange t) throws IOException {
+		
+		System.out.println("downloadAll Handler is called ");
+		String response = "";
+		if(!authorithy) {
+			response = "please login before use download";
+			t.sendResponseHeaders(200, response.length());
+			OutputStream os = t.getResponseBody();
+			os.write(response.getBytes());
+			os.close();
+			return;
+		}
+		Map<String, String> params = queryToMap(t.getRequestURI().getQuery());
+		response = "Current username: "+currentUser+"   \n";
+		int sep = params.get("ip").indexOf(':');
+		String ip = params.get("ip").substring(0,sep);
+		int port = Integer.parseInt(params.get("ip").substring(sep+1));
+		
+		facade.connect(ip,port,map.get(params.get("ip")).get(0),map.get(params.get("ip")).get(1));
+		
+		response += facade.downloadAll(params.get("folderName"));
 		
 		t.sendResponseHeaders(200, response.length());
 		OutputStream os = t.getResponseBody();

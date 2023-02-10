@@ -30,5 +30,7 @@ ip后面填写ip服务器的ip地址(冒号后面为端口数)，user填写用�
 下载：
 使用"http://localhost:8000/download/?ip=192.168.108.128:22&fileName=xxx"来下载服务器root目录下对应名字的文件到本地的download文件夹，文件名字填写在fileName后面
 使用"http://localhost:8000/downloadWithDestinationFile/?ip=192.168.108.128:22&fileName=xxx&folderName=xxx"来下载服务器root目录特定文件夹下对应名字的文件到本地的download文件夹，文件名字填写在fileName后面，文件夹名字填写在folderName后面
+使用"http://localhost:8000/downloadAll/?ip=192.168.108.128:22&folderName=xxx"来下载服务器root目录特定文件夹下所有文件到本地的downloadAll文件夹，文件夹名字填写在folderName后面
+
 
 
