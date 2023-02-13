@@ -282,7 +282,7 @@ public class facade {
            
 	           conn.close();
 	           
-	           result += "\nsuccessful\n";
+	           
 	           return result;
 	         
 	           

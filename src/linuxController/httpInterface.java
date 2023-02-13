@@ -101,6 +101,7 @@ public class httpInterface {
 		server.createContext("/download", new download());
 		server.createContext("/downloadWithDestinationFile", new downloadWithDestinationFile());
 		server.createContext("/downloadAll", new downloadAll());
+		server.createContext("/CheckCPUMemoryANDIO", new CheckCPUMemoryANDIOHandler());
 
 		server.setExecutor(null); // creates a default executor
 		server.start();
@@ -653,7 +654,7 @@ public class httpInterface {
 		System.out.println("SingleCustomizedInstruction Handler is called ");
 		String response = "";
 		if(!authorithy) {
-			response = "please login before use grab process";
+			response = "please login before use SingleCustomizedInstructionHandler";
 			t.sendResponseHeaders(200, response.length());
 			OutputStream os = t.getResponseBody();
 			os.write(response.getBytes());
@@ -675,6 +676,49 @@ public class httpInterface {
 		facade.connect(ip,port,map.get(params.get("ip")).get(0),map.get(params.get("ip")).get(1));
 		response += "Current ip: " + ip + "   Current port: " + port + "\n";
 		response += facade.instruction(ins)+"\n";
+
+				
+
+
+
+
+		t.sendResponseHeaders(200, response.length());
+		OutputStream os = t.getResponseBody();
+		os.write(response.getBytes());
+		os.close();
+		}
+	}
+	
+	static class  CheckCPUMemoryANDIOHandler implements HttpHandler {
+		public void handle(HttpExchange t) throws IOException {
+		
+		System.out.println("CheckCPUMemoryANDIO Handler is called ");
+		String response = "";
+		if(!authorithy) {
+			response = "please login before use CheckCPUMemoryANDIOHandler";
+			t.sendResponseHeaders(200, response.length());
+			OutputStream os = t.getResponseBody();
+			os.write(response.getBytes());
+			os.close();
+			return;
+		}
+		
+		Map<String, String> params = queryToMap(t.getRequestURI().getQuery());
+		
+
+		response = "Current username: "+currentUser+"   \n";
+		int sep = params.get("ip").indexOf(':');
+		String ip = params.get("ip").substring(0,sep);
+		int port = Integer.parseInt(params.get("ip").substring(sep+1));
+
+
+		facade.connect(ip,port,map.get(params.get("ip")).get(0),map.get(params.get("ip")).get(1));
+		response += "Current ip: " + ip + "   Current port: " + port + "\n";
+		response += "CPU and Memory:\n";
+		response += facade.instruction("vmstat -n 1 1")+"\n";
+		response += "Memory detail:\n" + facade.instruction("free -m") + "\n";
+		response += "IO:\n" + facade.instruction("ifstat");
+		
 
 				
 
