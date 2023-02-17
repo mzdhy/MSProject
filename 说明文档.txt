@@ -35,4 +35,7 @@ ip后面填写ip服务器的ip地址(冒号后面为端口数)，user填写用�
 查看CPU，内存和网络IO:
 使用"http://localhost:8000/CheckCPUMemoryANDIO/?ip=192.168.108.128:22"来查看当前的CPU，内存和网络IO，ip后面填需要查询的服务器的ip
 
+查看历史操作记录：
+使用"http://localhost:8000/History"来查看之前操作的记录
+
 

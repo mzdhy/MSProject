@@ -32,6 +32,7 @@ public class httpInterface {
 	static boolean full = true;
 	static boolean authorithy = false;
 	static String currentUser = null;
+	static ArrayList<String> Operation = new ArrayList<String>();
 	public static void main(String[] args) throws Exception {
 		HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
 		System.out.println("server started at ");
@@ -102,14 +103,15 @@ public class httpInterface {
 		server.createContext("/downloadWithDestinationFile", new downloadWithDestinationFile());
 		server.createContext("/downloadAll", new downloadAll());
 		server.createContext("/CheckCPUMemoryANDIO", new CheckCPUMemoryANDIOHandler());
-
+		server.createContext("/History", new HistoryHandler());
 		server.setExecutor(null); // creates a default executor
 		server.start();
 	}
 	
 	static class Home implements HttpHandler {
 		public void handle(HttpExchange t) throws IOException {
-		
+		String requestUrl ="http://localhost:8000"+ t.getRequestURI().toString();
+		Operation.add(requestUrl);
 		System.out.println("Home Handler is called ");
 		String response = "Instruction: use \"http://localhost:8000/Home\" to check the instruction\r\n"
 				+ "use \"http://localhost:8000/Register/?username=xxxxx&pswd=xxxxx\" to register new account\r\n"
@@ -132,7 +134,8 @@ public class httpInterface {
 	
 	static class Register implements HttpHandler {
 		public void handle(HttpExchange t) throws IOException {
-		
+		String requestUrl ="http://localhost:8000"+ t.getRequestURI().toString();
+		Operation.add(requestUrl);
 		System.out.println("Register Handler is called ");
 		Map<String, String> params = queryToMap(t.getRequestURI().getQuery());
 		String response = null;
@@ -167,7 +170,8 @@ public class httpInterface {
 	
 	static class LogIn implements HttpHandler {
 		public void handle(HttpExchange t) throws IOException {
-		
+		String requestUrl ="http://localhost:8000"+ t.getRequestURI().toString();
+		Operation.add(requestUrl);		
 		System.out.println("LogIn Handler is called ");
 		String response = "";
 		Map<String, String> params = queryToMap(t.getRequestURI().getQuery());
@@ -248,7 +252,8 @@ public class httpInterface {
 	
 	static class SignOut implements HttpHandler {
 		public void handle(HttpExchange t) throws IOException {
-		
+		String requestUrl ="http://localhost:8000"+ t.getRequestURI().toString();
+		Operation.add(requestUrl);	
 		System.out.println("SignOut Handler is called ");
 		String response = "";
 		if(authorithy == false) {
@@ -268,7 +273,8 @@ public class httpInterface {
 	
 	static class AccountUpdate implements HttpHandler {
 		public void handle(HttpExchange t) throws IOException {
-		
+		String requestUrl ="http://localhost:8000"+ t.getRequestURI().toString();
+		Operation.add(requestUrl);	
 		System.out.println("AccountUpdate Handler is called ");
 		String response = "";
 		if(!authorithy) {
@@ -340,7 +346,8 @@ public class httpInterface {
 	
 	static class Check implements HttpHandler {
 		public void handle(HttpExchange t) throws IOException {
-		
+		String requestUrl ="http://localhost:8000"+ t.getRequestURI().toString();
+		Operation.add(requestUrl);	
 		System.out.println("Check Handler is called ");
 		String response = "";
 		if(!authorithy) {
@@ -366,7 +373,8 @@ public class httpInterface {
 	
 	static class GrabDataHandler implements HttpHandler {
 			public void handle(HttpExchange t) throws IOException {
-			
+			String requestUrl ="http://localhost:8000"+ t.getRequestURI().toString();
+			Operation.add(requestUrl);	
 			System.out.println("GrabData Handler is called ");
 			String response = "";
 			if(!authorithy) {
@@ -440,7 +448,8 @@ public class httpInterface {
 	
 	static class GrabAllDataHandler implements HttpHandler {
 		public void handle(HttpExchange t) throws IOException {
-			
+			String requestUrl ="http://localhost:8000"+ t.getRequestURI().toString();
+			Operation.add(requestUrl);	
 			System.out.println("GraAllData Handler is called ");
 			String response = "";
 			if(!authorithy) {
@@ -482,7 +491,8 @@ public class httpInterface {
 	
 	static class CloseDataHandler implements HttpHandler {
 		public void handle(HttpExchange t) throws IOException {
-		
+			String requestUrl ="http://localhost:8000"+ t.getRequestURI().toString();
+			Operation.add(requestUrl);	
 		System.out.println("CloseData Handler is called ");
 		String response = "";
 		if(!authorithy) {
@@ -562,7 +572,8 @@ public class httpInterface {
 	
 	static class CloseDataByNameHandler implements HttpHandler {
 		public void handle(HttpExchange t) throws IOException {
-		
+			String requestUrl ="http://localhost:8000"+ t.getRequestURI().toString();
+			Operation.add(requestUrl);	
 		System.out.println("CloseDataByName Handler is called ");
 		String response = "";
 		if(!authorithy) {
@@ -608,7 +619,8 @@ public class httpInterface {
 	
 	static class  CustomizedInstructionHandler implements HttpHandler {
 		public void handle(HttpExchange t) throws IOException {
-		
+			String requestUrl ="http://localhost:8000"+ t.getRequestURI().toString();
+			Operation.add(requestUrl);	
 		System.out.println("CustomizedInstruction Handler is called ");
 		String response = "";
 		if(!authorithy) {
@@ -650,7 +662,8 @@ public class httpInterface {
 	
 	static class  SingleCustomizedInstructionHandler implements HttpHandler {
 		public void handle(HttpExchange t) throws IOException {
-		
+			String requestUrl ="http://localhost:8000"+ t.getRequestURI().toString();
+			Operation.add(requestUrl);	
 		System.out.println("SingleCustomizedInstruction Handler is called ");
 		String response = "";
 		if(!authorithy) {
@@ -691,7 +704,8 @@ public class httpInterface {
 	
 	static class  CheckCPUMemoryANDIOHandler implements HttpHandler {
 		public void handle(HttpExchange t) throws IOException {
-		
+			String requestUrl ="http://localhost:8000"+ t.getRequestURI().toString();
+			Operation.add(requestUrl);	
 		System.out.println("CheckCPUMemoryANDIO Handler is called ");
 		String response = "";
 		if(!authorithy) {
@@ -734,7 +748,8 @@ public class httpInterface {
 	
 	static class startShell implements HttpHandler {
 		public void handle(HttpExchange t) throws IOException {
-		
+			String requestUrl ="http://localhost:8000"+ t.getRequestURI().toString();
+			Operation.add(requestUrl);	
 		System.out.println("startShell Handler is called ");
 		String response = "";
 		if(!authorithy) {
@@ -763,7 +778,8 @@ public class httpInterface {
 	
 	static class closeShell implements HttpHandler {
 		public void handle(HttpExchange t) throws IOException {
-		
+			String requestUrl ="http://localhost:8000"+ t.getRequestURI().toString();
+			Operation.add(requestUrl);	
 		System.out.println("closeShell Handler is called ");
 		String response = "";
 		if(!authorithy) {
@@ -785,7 +801,8 @@ public class httpInterface {
 	
 	static class shellIns implements HttpHandler {
 		public void handle(HttpExchange t) throws IOException {
-		
+			String requestUrl ="http://localhost:8000"+ t.getRequestURI().toString();
+			Operation.add(requestUrl);	
 		System.out.println("shellIns Handler is called ");
 		String response = "";
 		if(!authorithy) {
@@ -821,7 +838,8 @@ public class httpInterface {
 	
 	static class upload implements HttpHandler {
 		public void handle(HttpExchange t) throws IOException {
-		
+			String requestUrl ="http://localhost:8000"+ t.getRequestURI().toString();
+			Operation.add(requestUrl);	
 		System.out.println("upload Handler is called ");
 		String response = "";
 		if(!authorithy) {
@@ -851,7 +869,8 @@ public class httpInterface {
 	
 	static class uploadWithDestinationFile implements HttpHandler {
 		public void handle(HttpExchange t) throws IOException {
-		
+			String requestUrl ="http://localhost:8000"+ t.getRequestURI().toString();
+			Operation.add(requestUrl);	
 		System.out.println("uploadWithDestinationFile Handler is called ");
 		String response = "";
 		if(!authorithy) {
@@ -881,7 +900,8 @@ public class httpInterface {
 	
 	static class uploadAll implements HttpHandler {
 		public void handle(HttpExchange t) throws IOException {
-		
+			String requestUrl ="http://localhost:8000"+ t.getRequestURI().toString();
+			Operation.add(requestUrl);	
 		System.out.println("uploadAll Handler is called ");
 		String response = "";
 		if(!authorithy) {
@@ -911,7 +931,8 @@ public class httpInterface {
 	
 	static class uploadAllWithDestinationFile implements HttpHandler {
 		public void handle(HttpExchange t) throws IOException {
-		
+			String requestUrl ="http://localhost:8000"+ t.getRequestURI().toString();
+			Operation.add(requestUrl);	
 		System.out.println("uploadAllWithDestinationFile Handler is called ");
 		String response = "";
 		if(!authorithy) {
@@ -941,7 +962,8 @@ public class httpInterface {
 	
 	static class download implements HttpHandler {
 		public void handle(HttpExchange t) throws IOException {
-		
+			String requestUrl ="http://localhost:8000"+ t.getRequestURI().toString();
+			Operation.add(requestUrl);	
 		System.out.println("download Handler is called ");
 		String response = "";
 		if(!authorithy) {
@@ -971,7 +993,8 @@ public class httpInterface {
 	
 	static class downloadAll implements HttpHandler {
 		public void handle(HttpExchange t) throws IOException {
-		
+			String requestUrl ="http://localhost:8000"+ t.getRequestURI().toString();
+			Operation.add(requestUrl);	
 		System.out.println("downloadAll Handler is called ");
 		String response = "";
 		if(!authorithy) {
@@ -1001,7 +1024,8 @@ public class httpInterface {
 	
 	static class downloadWithDestinationFile implements HttpHandler {
 		public void handle(HttpExchange t) throws IOException {
-		
+			String requestUrl ="http://localhost:8000"+ t.getRequestURI().toString();
+			Operation.add(requestUrl);	
 		System.out.println("downloadWithDestinationFile Handler is called ");
 		String response = "";
 		if(!authorithy) {
@@ -1029,6 +1053,22 @@ public class httpInterface {
 		}
 	}
 	
+	static class HistoryHandler implements HttpHandler {
+		public void handle(HttpExchange t) throws IOException {
+		String requestUrl ="http://localhost:8000"+ t.getRequestURI().toString();
+		Operation.add(requestUrl);	
+		System.out.println("History Handler is called ");
+		String response = "";
+		for(int i = 1; i<=Operation.size();i++) {
+			response += i + ": " + Operation.get(i-1) + "\n";
+		}
+		
+		t.sendResponseHeaders(200, response.length());
+		OutputStream os = t.getResponseBody();
+		os.write(response.getBytes());
+		os.close();
+		}
+	}
 	public static Map<String, String> queryToMap(String query) {
 		if (query == null) {
 			return null;
